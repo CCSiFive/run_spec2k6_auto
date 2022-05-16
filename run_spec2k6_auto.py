@@ -101,28 +101,45 @@ def parse_ini(args):
     try:
         args.script_dir = config.get('script', 'dir')
         is_file_exist(args.script_dir)
+    except configparser.NoSectionError:
+        print("Ini file parsing error")
 
+    try:
         target = config.get('fpga', 'target')
         core = config.get('fpga', 'core')
         args.target = "{0}_{1}".format(core, target)
         args.bit = config.get('fpga', 'bit')
         is_file_exist(args.bit)
+    except configparser.NoSectionError:
+        print("Ini file parsing error")
 
+    try:
         args.uboot_itb = config.get('fusdk', 'uboot_itb')
         is_file_exist(args.uboot_itb)
+    except configparser.NoSectionError:
+        print("Ini file parsing error")
 
+    try:
         args.uboot_spl = config.get('fusdk', 'uboot_spl')
         is_file_exist(args.uboot_spl)
+    except configparser.NoSectionError:
+        print("Ini file parsing error")
 
+    try:
         args.dtb = config.get( 'fusdk', 'dtb')
         is_file_exist(args.dtb)
-
+    except configparser.NoSectionError:
+        print("Ini file parsing error")
+ 
+    try:
         args.kernel = config.get('fusdk', 'kernel')
         is_file_exist(args.kernel)
+    except configparser.NoSectionError:
+        print("Ini file parsing error")
 
+    try:
         args.root_fs = config.get('fusdk' , 'root_fs')
         is_file_exist(args.root_fs)
-
     except configparser.NoSectionError:
         print("Ini file parsing error")
 
@@ -196,7 +213,7 @@ class preparation_handler(file_handler):
     def prepare_symlinks(self):
         print("Prepare bitstream ...")
         base_name = os.path.basename(self.args.bit)
-        self.bit_path = "{0}/{1}.bit".format(self.folder_path, "design-vcu118.bit")
+        self.bit_path = "{0}/{1}.bit".format(self.folder_path, "design-vcu118")
         self.create_symlink(self.args.bit, self.bit_path)
         
         print("Prepare uboot_spl ...")
@@ -270,6 +287,15 @@ def get_machine_name():
 
 if __name__ == "__main__":
     args = parse_args()
+    args.script_dir = ""
+    args.bit = ""
+    args.target = ""
+    args.uboot_itb = ""
+    args.uboot_spl = ""
+    args.dtb = ""
+    args.kernel = ""
+    args.root_fs = ""
+
     parse_ini(args)
 
     symlink_dir = "symlink_dir_{0}".format(get_machine_name())
