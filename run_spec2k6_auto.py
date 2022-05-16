@@ -236,13 +236,6 @@ def run_spec2k6(args, handler: file_handler):
     script_dir = args.script_dir
     script_path = "{0}/pro_fpga_run_linux.py".format(script_dir)
 
-    expanded_args = ""
-    if args.not_keep_nbd_when_exit is False:
-        expanded_args = "--keep-nbd-when-exit"
-
-    if args.not_reflash is True:
-        expanded_args += " --skip-linux-boot --skip-program-fpga"
-
     command_run_spec2k6 = ["python3", script_path, "-t", args.target,
            "-d", handler.folder_path, "--nbd",
            "--uboot-spl-path", handler.uboot_spl_path,
@@ -258,9 +251,13 @@ def run_spec2k6(args, handler: file_handler):
            "--spec2k6-binary", args.spec2k6_binary,
            "--spec2k6-casename", args.spec2k6_casename,
            "--retry", str(3)]
+    
+    if args.not_keep_nbd_when_exit is False:
+        command_run_spec2k6.append("--keep-nbd-when-exit")
 
-    if expanded_args is not "":
-        command_run_spec2k6.append(expanded_args)
+    if args.not_reflash is True:
+        command_run_spec2k6.append("--skip-linux-boot")
+        command_run_spec2k6.append("--skip-program-fpga")
 
     print(command_run_spec2k6)
     subprocess.run(command_run_spec2k6)
