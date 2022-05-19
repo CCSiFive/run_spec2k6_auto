@@ -28,19 +28,21 @@ should include below section/key
      kernel =
 ''')
 
-    parser.add_argument('--spec2k6-size',
+    parser.add_argument('--dataset',
                         type=str,
                         default="ref",
                         help="ref / train / test")
-    parser.add_argument('--spec2k6-iter',
+    parser.add_argument('--iter',
                         type=int,
                         default=1,
                         help="1 or more")
-    parser.add_argument('--spec2k6-binary',
+    parser.add_argument('--binary',
                         required = True,
                         type=lambda x: check_file_exist(parser, x),
                         help="path of spec2k6's bin")
-    parser.add_argument('--spec2k6-casename',
+    parser.add_argument('--casename',
+                        '--benchmark',
+                        '-bench',
                         required = True,
                         type=str,
                         help="462.libquantum or ...")
@@ -263,10 +265,10 @@ def run_spec2k6(args, handler: file_handler):
            "--fpga-use-static-ip",
            "--server-ip", get_ip_addr(),
            "--spec2k6",
-           "--spec2k6-size", args.spec2k6_size,
-           "--spec2k6-iter", str(args.spec2k6_iter),
-           "--spec2k6-binary", args.spec2k6_binary,
-           "--spec2k6-casename", args.spec2k6_casename,
+           "--spec2k6-size", args.dataset,
+           "--spec2k6-iter", str(args.iter),
+           "--spec2k6-binary", args.binary,
+           "--spec2k6-casename", args.casename,
            "--retry", str(3)]
     
     if args.not_keep_nbd_when_exit is False:
